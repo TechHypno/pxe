@@ -1,0 +1,24 @@
+version: '3.9'
+networks:
+  dnsmasq:
+    name: 'dnsmasq'
+services:
+  pxe:
+    container_name: pxe
+    build:
+      context: ./
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - 'dnsmasq'
+    # network_mode: 'host'
+    ports:
+      - '67:67/udp'
+      - '68:68/udp'
+      - '8067:8067/tcp'
+    environment:
+      - PXE_PASSWORD=${PXE_PASSWORD:-password}
+      - PXE_SERVERIP=${PXE_SERVERIP:-192.168.1.10}
+      - PXE_ROUTERIP=${PXE_ROUTERIP:-192.168.1.1}
+    restart: unless-stopped
+

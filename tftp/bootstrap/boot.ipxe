@@ -1,0 +1,9 @@
+#!ipxe
+
+set bootsrv http://${proxydhcp/next-server}:8067
+echo BOOTSRV: ${bootsrv}
+echo UUID: ${uuid}
+chain ${bootsrv}/ipxe/uuid-${uuid}
+echo Chainloading from ${bootsrv}/ipxe/uuid-${uuid} failed.
+prompt --timeout 5000 Rebooting, Press any key to enter the iPXE shell instead. || reboot
+shell
