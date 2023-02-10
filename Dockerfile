@@ -22,4 +22,5 @@ RUN ln -sf bootstrap/boot.ipxe links/boot.ipxe.0
 WORKDIR /var/log/nginx
 
 COPY init.sh /init.sh
+RUN chmod a=x /init.sh
 ENTRYPOINT ["/init.sh"]
