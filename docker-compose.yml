@@ -15,6 +15,7 @@ services:
     ports:
       - '67:67/udp'
       - '68:68/udp'
+      - '69:69/udp'
       - '8067:8067/tcp'
     environment:
       - PXE_PASSWORD=${PXE_PASSWORD:-password}
