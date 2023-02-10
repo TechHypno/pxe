@@ -11,6 +11,7 @@ RUN chmod a=rw /etc/nginx/ipxesvc/lua/session.db
 
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp
+RUN mkdir links
 RUN ln -sf bootstrap/ipxe.efi links/ipxe.efi
 RUN ln -sf bootstrap/ipxe.efi links/ipxe.efi.0
 RUN ln -sf bootstrap/undionly.kpxe links/undionly.kpxe
