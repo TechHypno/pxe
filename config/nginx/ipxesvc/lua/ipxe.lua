@@ -18,16 +18,11 @@ for _, line in ipairs(lines) do
     end
 end
 if (ipxe[client_uuid]) then
-    ngx.say(table.concat(ipxe[client_uuid]))
+    ngx.say(table.concat(ipxe[client_uuid], '\n'))
     return ngx.exit(ngx.HTTP_OK)
 elseif ipxe['default'] then
-    ngx.say(table.concat(ipxe['default']))
+    ngx.say(table.concat(ipxe['default'], '\n'))
     return ngx.exit(ngx.HTTP_OK)
 else
     return ngx.exit(ngx.HTTP_NO_CONTENT)
 end
--- TODO: dont respond to ips that werent served a bootfile recently, 403
-            
-        
-            
-
