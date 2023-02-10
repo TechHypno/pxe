@@ -12,12 +12,13 @@ RUN chmod a=rw /etc/nginx/ipxesvc/lua/session.db
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp
 RUN mkdir links
-RUN ln -sf ../bootstrap/ipxe.efi ./links/ipxe.efi
-RUN ln -sf ../bootstrap/ipxe.efi ./links/ipxe.efi.0
-RUN ln -sf ../bootstrap/undionly.kpxe ./links/undionly.kpxe
-RUN ln -sf ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0
-RUN ln -sf ../bootstrap/boot.ipxe ./links/boot.ipxe
-RUN ln -sf ../bootstrap/boot.ipxe ./links/boot.ipxe.0
+RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi
+RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi.0
+RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe
+RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0
+RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe
+RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe.0
+RUN chown -R dnsmasq:dnsmasq *
 
 WORKDIR /var/log/nginx
 

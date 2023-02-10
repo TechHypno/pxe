@@ -26,7 +26,7 @@ elseif ipxe['default'] then
 else
     return ngx.exit(ngx.HTTP_NO_CONTENT)
 end
-    
+-- TODO: dont respond to ips that werent served a bootfile recently, 403
             
         
             
