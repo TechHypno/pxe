@@ -11,7 +11,7 @@ services:
       - NET_ADMIN
     networks:
       - 'dnsmasq'
-    # network_mode: 'host'
+    network_mode: 'host'
     ports:
       - '67:67/udp'
       - '68:68/udp'
