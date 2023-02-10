@@ -1,7 +1,7 @@
 version: '3.9'
-networks:
-  dnsmasq:
-    name: 'dnsmasq'
+# networks:
+#   dnsmasq:
+#     name: 'dnsmasq'
 services:
   pxe:
     container_name: pxe
@@ -9,8 +9,8 @@ services:
       context: ./
     cap_add:
       - NET_ADMIN
-    networks:
-      - 'dnsmasq'
+    # networks:
+    #   - 'dnsmasq'
     network_mode: 'host'
     ports:
       - '67:67/udp'
