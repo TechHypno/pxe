@@ -13,8 +13,8 @@ local ipxe = {}
 local script
 for _, line in ipairs(lines) do
     if line:find('#!ipxe') == 1 then
-        uuid = line:match('^.*(uuid-%S+).*$') or 'all'
-        ipv4 = line:match('^.*(ipv4-%S+).*$') or 'all'
+        local uuid = line:match('^.*(uuid-%S+).*$') or 'all'
+        local ipv4 = line:match('^.*(ipv4-%S+).*$') or 'all'
         script = {} ipxe[ipv4..'.'..uuid] = script
     end
     if (script) then
