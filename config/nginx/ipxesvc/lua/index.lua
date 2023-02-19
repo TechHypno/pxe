@@ -193,7 +193,7 @@ local filelistelement = [[
 local directory = [[
 <div class="margin-h-10">
     <div class="left">
-        <a class="button rounded-small" style="margin-top: 10px" href="https://ipxe.org/cmd" target="_blank">iPXE Commands</a>
+        <a class="button rounded-small" style="margin-top: 10px" href="/">Main Script</a>
     </div>
     <div class="left" style="width: 80px; margin-left: 10px">
         <form action="/" method="post">
@@ -276,9 +276,7 @@ if is_logged_in then
             other_file = assert(io.open(other_files_dir..'/'..post.file, 'w'))
             other_file:write(post.text)
             other_file:close()
-            output = output:gsub('{content}', editor, 1)
-            output = output:gsub('{file}', post.file, 1)
-            output = output:gsub('{text}', post.text, 1)
+            ShowList()
         end
     elseif (post.action == 'list') then
         ShowList()
