@@ -9,7 +9,7 @@ local template = [[
     * {
         box-sizing: border-box;
     }
-    html, body, section, form {
+    html, body, section {
         background-color: #242f40;
         max-width: 1900px;
         height: 100%;
@@ -112,6 +112,27 @@ local template = [[
     </style>
 </head>
 <body>
+    <script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    async function cpy(id)
+    {
+        if (window.getSelection) {
+            var t = document.getElementById(id)
+            var ra = document.createRange();
+            var sl = window.getSelection();
+            ra.selectNodeContents(t);
+            sl.removeAllRanges();
+            sl.addRange(ra);
+            document.execCommand("copy")
+            var temp = t.textContent
+            t.textContent = "Copied."
+            await sleep(1500)
+            t.textContent = temp
+        }
+    }
+    </script>
     <section>
         {content}
     </section>
@@ -134,6 +155,12 @@ local editor = [[
     <div class="left">
         <a class="button rounded-small" style="margin-top: 10px" href="https://ipxe.org/cmd" target="_blank">iPXE Commands</a>
     </div>
+    <div class="left" style="width: 80px; margin-left: 10px">
+        <form action="/" method="post">
+            <input hidden name="action" value="list"/>
+            <button class="rounded-small" type="sumbit">Files</button>
+        </form>
+    </div>
     <div class="right">
         <form action="/" method="post">
             <input hidden name="action" value="signout"/>
@@ -142,22 +169,64 @@ local editor = [[
     </div>
 </div>
 <div class="full-height margin-h-10 rounded-large">
-    <form action="/" method="post">
+    <form action="/" method="post" style="height: 100%%">
         <input hidden name="action" value="save"/>
-        <textarea class="editor full-width" id="editor" spellcheck="false" name="ipxe">{ipxe}</textarea>
+        <input hidden name="file" value="{file}"/>
+        <textarea class="editor full-width" id="editor" spellcheck="false" name="text">{text}</textarea>
         <button class="margin-v-10 rounded-small" type="sumbit">Save</button>
+    </form>
+</div>
+]]
+local filelistelement = [[
+<button class="rounded-small left" style="width:28px" onClick="cpy('{file}')">📋</button>
+<form action="/" method="post">
+    <input hidden name="action" value=""/>
+    <input hidden name="file" value="{file}"/>
+    <button class="rounded-small left" style="width: 50%%" id="{file}" type="sumbit">{label}</button>
+</form>
+<form action="/" method="post">
+    <input hidden name="action" value="delete"/>
+    <input hidden name="file" value="{file}"/>
+    <button class="rounded-small left" style="width:28px;color:#F0F0F0;background-color:#F00000" type="sumbit">X</button>
+</form>
+]]
+local directory = [[
+<div class="margin-h-10">
+    <div class="left">
+        <a class="button rounded-small" style="margin-top: 10px" href="https://ipxe.org/cmd" target="_blank">iPXE Commands</a>
+    </div>
+    <div class="left" style="width: 80px; margin-left: 10px">
+        <form action="/" method="post">
+            <input hidden name="action" value="list"/>
+            <button class="rounded-small" type="sumbit">Files</button>
+        </form>
+    </div>
+    <div class="right">
+        <form action="/" method="post">
+            <input hidden name="action" value="signout"/>
+            <button class="rounded-small" type="sumbit">Sign out</button>
+        </form>
+    </div>
+</div>
+<div class="full-height margin-h-10 rounded-large" style="padding-top: 50px">
+    {list}
+    <form action="/" method="post">
+    <input hidden name="action" value="new"/>
+    <button class="margin-v-10 rounded-small" style="width: 50%%; clear:left; margin-left: 28px" type="sumbit">New</button>
     </form>
 </div>
 ]]
 
 
+
 package.path = '/etc/nginx/ipxesvc/lua/?.lua;'..package.path
 local ipxe_file_path = '/etc/nginx/ipxesvc/ipxe.conf'
+local other_files_dir = '/etc/nginx/ipxesvc/files'
 
 local session = require('session')
 local is_logged_in = session:init() and session:is_valid()
 
-local output
+local output = template
 
 local post = {}
 if ngx.req.get_method() == 'POST' then
@@ -178,16 +247,79 @@ elseif post.action == 'signout' then
     session:invalidate()
 end
 
+local function ShowList()
+    local list = {}
+    local pfile = io.popen('ls "'..other_files_dir..'"')
+    for filename in pfile:lines() do
+        local button = filelistelement
+        button = button:gsub('{file}', filename)
+        button = button:gsub('{label}', filename, 1)
+        list[#list + 1] = button
+    end
+    pfile:close()
+    output = output:gsub('{content}', directory, 1)
+    output = output:gsub('{list}', table.concat(list, "\n"), 1)
+end
+
 if is_logged_in then
-    if post.action == 'save' then
-        local ipxe_file = assert(io.open(ipxe_file_path, 'w'))
-        ipxe_file:write(post.ipxe)
-        ipxe_file:close()
-        output = string.gsub(string.gsub(template, '{content}', editor, 1), '{ipxe}', post.ipxe, 1)
+    if (post.action == 'save') then
+        if (post.file == 'ipxe') then
+            local ipxe_file = assert(io.open(ipxe_file_path, 'w'))
+            ipxe_file:write(post.text)
+            ipxe_file:close()
+            output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{file}', 'ipxe', 1)
+            output = output:gsub('{text}', post.text, 1)
+        elseif (post.file:find('/') == nil) then
+            local other_file = assert(io.open(other_files_dir..'/'..post.file, 'r'))
+            other_file:close()
+            other_file = assert(io.open(other_files_dir..'/'..post.file, 'w'))
+            other_file:write(post.text)
+            other_file:close()
+            output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{file}', post.file, 1)
+            output = output:gsub('{text}', post.text, 1)
+        end
+    elseif (post.action == 'list') then
+        ShowList()
+    elseif (post.action == 'new') then
+        local charset = {}  do
+            for c = 48, 57  do table.insert(charset, string.char(c)) end
+            for c = 65, 90  do table.insert(charset, string.char(c)) end
+            for c = 97, 122 do table.insert(charset, string.char(c)) end
+        end
+        local function randomString(length)
+            if not length or length <= 0 then return '' end
+            math.randomseed(os.clock()^5)
+            return randomString(length - 1) .. charset[math.random(1, #charset)]
+        end
+        local filename = randomString(32)
+        local file = assert(io.open(other_files_dir..'/'..filename, 'w'))
+        file:write('')
+        file:close()
+        output = output:gsub('{content}', editor, 1)
+        output = output:gsub('{file}', filename, 1)
+        output = output:gsub('{text}', '', 1)
+    elseif (post.action == 'delete') then
+        if (post.file and post.file:find('/') == nil) then
+            local pfile = io.popen('rm -f "'..other_files_dir..'/'..post.file..'"')
+            pfile:close()
+        end
+        ShowList()
     else
-        local ipxe_file = assert(io.open(ipxe_file_path, 'r'))
-        output = string.gsub(string.gsub(template, '{content}', editor, 1), '{ipxe}', ipxe_file:read('*a'), 1)
-        ipxe_file:close()
+        if (post.file and post.file:find('/') == nil) then
+            local file = assert(io.open(other_files_dir..'/'..post.file, 'r'))
+            output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{file}', post.file, 1)
+            output = output:gsub('{text}', file:read('*a'), 1)
+            file:close()
+        else
+            local file = assert(io.open(ipxe_file_path, 'r'))
+            output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{file}', 'ipxe', 1)
+            output = output:gsub('{text}', file:read('*a'), 1)
+            file:close()
+        end
     end
     
     session:save(((post.remember == 'on') or (session:get_time_remaining() > 3600)) and (3600 * 24 * 7) or 3600)

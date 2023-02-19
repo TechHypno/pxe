@@ -1,3 +1,4 @@
+local client_addr = ngx.var.remote_addr
 local client_uuid = ngx.var[1]
 if (not (client_uuid:find('uuid-') == 1)) then
     return ngx.exit(ngx.HTTP_BAD_REQUEST)
@@ -7,21 +8,24 @@ local lines = {}
 for line in io.lines(ipxe_file_path) do
     lines[#lines+1] = line
 end
-local ipxe, uuid = {}, nil
+local tinsert = table.insert
+local ipxe = {}
+local script
 for _, line in ipairs(lines) do
-    if line:find('#!ipxe') then
-        uuid = line:match('^#!ipxe.*(uuid%-%S+).*') or 'default'
+    if line:find('#!ipxe') == 1 then
+        uuid = line:match('^.*(uuid-%S+).*$') or 'all'
+        ipv4 = line:match('^.*(ipv4-%S+).*$') or 'all'
+        script = {} ipxe[ipv4..'.'..uuid] = script
     end
-    if (uuid) then
-        ipxe[uuid] = ipxe[uuid] or {}
-        ipxe[uuid][#ipxe[uuid]+1] = line
+    if (script) then
+        tinsert(script.lines, line)
     end
 end
-if (ipxe[client_uuid]) then
-    ngx.say(table.concat(ipxe[client_uuid], '\n'))
-    return ngx.exit(ngx.HTTP_OK)
-elseif ipxe['default'] then
-    ngx.say(table.concat(ipxe['default'], '\n'))
+script = ipxe[client_addr..'.'..client_uuid]
+      or ipxe['all.'..client_uuid]
+      or ipxe[client_addr..'.all']
+if (script) then
+    ngx.say(table.concat(script.lines, '\n'))
     return ngx.exit(ngx.HTTP_OK)
 else
     return ngx.exit(ngx.HTTP_NO_CONTENT)

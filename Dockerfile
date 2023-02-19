@@ -8,6 +8,7 @@ RUN apk add --no-cache nginx-mod-http-lua
 COPY config/ /etc
 RUN chmod a=rw /etc/nginx/ipxesvc/ipxe.conf
 RUN chmod a=rw /etc/nginx/ipxesvc/lua/session.db
+RUN chmod a=rwx /etc/nginx/ipxesvc/files
 
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp
