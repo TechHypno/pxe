@@ -18,14 +18,14 @@ for _, line in ipairs(lines) do
         script = {} ipxe[ipv4..'.'..uuid] = script
     end
     if (script) then
-        tinsert(script.lines, line)
+        tinsert(script, line)
     end
 end
 script = ipxe[client_addr..'.'..client_uuid]
       or ipxe['all.'..client_uuid]
       or ipxe[client_addr..'.all']
 if (script) then
-    ngx.say(table.concat(script.lines, '\n'))
+    ngx.say(table.concat(script, '\n'))
     return ngx.exit(ngx.HTTP_OK)
 else
     return ngx.exit(ngx.HTTP_NO_CONTENT)
