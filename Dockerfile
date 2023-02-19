@@ -8,7 +8,7 @@ RUN /bin/ash -c 'apk add --no-cache nginx-mod-http-lua'
 COPY config/ /etc
 RUN /bin/ash -c 'chmod 666 /etc/nginx/ipxesvc/ipxe.conf'
 RUN /bin/ash -c 'chmod 666 /etc/nginx/ipxesvc/lua/session.db'
-RUN /bin/ash -c 'chmod 777 /etc/nginx/ipxesvc/files'
+# RUN /bin/ash -c 'chmod 777 /etc/nginx/ipxesvc/files'
 
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp

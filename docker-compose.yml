@@ -1,7 +1,4 @@
 version: '3.9'
-# networks:
-#   dnsmasq:
-#     name: 'dnsmasq'
 services:
   pxe:
     container_name: pxe
