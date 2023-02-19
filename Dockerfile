@@ -6,9 +6,9 @@ RUN apk add --no-cache dnsmasq
 RUN apk add --no-cache nginx-mod-http-lua
 
 COPY config/ /etc
-RUN chmod +rw /etc/nginx/ipxesvc/ipxe.conf
-RUN chmod +rw /etc/nginx/ipxesvc/lua/session.db
-RUN chmod +x /etc/nginx/ipxesvc/files
+RUN chmod 666 /etc/nginx/ipxesvc/ipxe.conf
+RUN chmod 666 /etc/nginx/ipxesvc/lua/session.db
+RUN chmod 777 /etc/nginx/ipxesvc/files
 
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp
