@@ -182,7 +182,7 @@ local filelistelement = [[
 <form action="/" method="post">
     <input hidden name="action" value=""/>
     <input hidden name="file" value="{file}"/>
-    <button class="rounded-small left" style="width: 50%%" id="{file}" type="sumbit">{label}</button>
+    <button class="rounded-small left" style="width:320px" id="{file}" type="sumbit">{label}</button>
 </form>
 <form action="/" method="post">
     <input hidden name="action" value="delete"/>
@@ -212,7 +212,7 @@ local directory = [[
     {list}
     <form action="/" method="post">
     <input hidden name="action" value="new"/>
-    <button class="margin-v-10 rounded-small" style="width: 50%%; clear:left; margin-left: 28px" type="sumbit">New</button>
+    <button class="margin-v-10 rounded-small" style="width: 320px; clear:left; margin-left: 28px" type="sumbit">New</button>
     </form>
 </div>
 ]]
