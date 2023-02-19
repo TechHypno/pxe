@@ -12,14 +12,14 @@ RUN /bin/ash -c 'chmod 777 /etc/nginx/ipxesvc/files'
 
 COPY tftp/ /var/tftp
 WORKDIR /var/tftp
-RUN /bin/ash -c 'mkdir links
+RUN /bin/ash -c 'mkdir links'
 RUN /bin/ash -c 'ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi'
 RUN /bin/ash -c 'ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi.0'
 RUN /bin/ash -c 'ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe'
 RUN /bin/ash -c 'ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0'
 RUN /bin/ash -c 'ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe'
 RUN /bin/ash -c 'ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe.0'
-RUN /bin/ash -c 'chown -R dnsmasq:dnsmasq *''
+RUN /bin/ash -c 'chown -R dnsmasq:dnsmasq *'
 
 WORKDIR /var/log/nginx
 
