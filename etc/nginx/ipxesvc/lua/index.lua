@@ -226,8 +226,8 @@ local directory = [[
 
 
 package.path = '/etc/nginx/ipxesvc/lua/?.lua;'..package.path
-local ipxe_file_path = '/etc/nginx/ipxesvc/ipxe.conf'
-local other_files_dir = '/etc/nginx/ipxesvc/files'
+local ipxe_file_path = '/userdata/ipxe.conf'
+local other_files_dir = '/userdata/files'
 
 local session = require('session')
 local is_logged_in = session:init() and session:is_valid()

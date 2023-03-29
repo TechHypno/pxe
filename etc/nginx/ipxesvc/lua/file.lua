@@ -1,7 +1,7 @@
 local client_addr = ngx.var.remote_addr
 local client_requested_file = ngx.var[1]
 
-local files_dir = '/etc/nginx/ipxesvc/files'
+local files_dir = '/userdata/files'
 local file_path = files_dir..'/'..client_requested_file
 
 -- local pfile = io.popen('ls"'..file_path..'"')

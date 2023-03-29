@@ -16,5 +16,7 @@ services:
       - 'PXE_PASSWORD=${PXE_PASSWORD:-password}'
       - 'PXE_SERVERIP=${PXE_SERVERIP:-192.168.1.10}'
       - 'PXE_ROUTERIP=${PXE_ROUTERIP:-192.168.1.1}'
+    volumes:
+      - '${PXE_DATAPATH:-/path/to/data/pxe}:/config'
     restart: unless-stopped
 

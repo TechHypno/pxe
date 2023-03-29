@@ -50,7 +50,7 @@ local session = {
         self._db = ntbl
     end,
     storage = {
-        _path = '/etc/nginx/ipxesvc/lua/session.db',
+        _path = '/userdata/session.db',
         set_path = function(self, newpath)
             self._path = newpath
         end,

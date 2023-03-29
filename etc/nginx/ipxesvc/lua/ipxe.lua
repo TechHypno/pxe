@@ -3,7 +3,7 @@ local client_uuid = ngx.var[1]
 if (not (client_uuid:find('uuid-') == 1)) then
     return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
-local ipxe_file_path = '/etc/nginx/ipxesvc/ipxe.conf'
+local ipxe_file_path = '/userdata/ipxe.conf'
 local lines = {}
 for line in io.lines(ipxe_file_path) do
     lines[#lines+1] = line
