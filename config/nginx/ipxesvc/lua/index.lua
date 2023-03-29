@@ -150,17 +150,30 @@ local signin = [[
     </div>
 </form>
 ]]
-local editor = [[
-<div class="margin-h-10">
+local links = {
+    ipxehelp = [[
     <div class="left">
         <a class="button rounded-small" style="margin-top: 10px" href="https://ipxe.org/cmd" target="_blank">iPXE Commands</a>
     </div>
-    <div class="left" style="width: 80px; margin-left: 10px">
-        <form action="/" method="post">
-            <input hidden name="action" value="list"/>
-            <button class="rounded-small" type="sumbit">Files</button>
-        </form>
-    </div>
+]],
+    mainscript = [[
+        <div class="left">
+            <a class="button rounded-small" style="margin-top: 10px" href="/">Main Script</a>
+        </div>
+]],
+    directory = [[
+        <div class="left" style="width: 80px; margin-left: 10px">
+            <form action="/" method="post">
+                <input hidden name="action" value="list"/>
+                <button class="rounded-small" type="sumbit">Files</button>
+            </form>
+        </div>
+]]
+}
+local editor = [[
+<div class="margin-h-10">
+    {link1}
+    {link2}
     <div class="right">
         <form action="/" method="post">
             <input hidden name="action" value="signout"/>
@@ -192,15 +205,8 @@ local filelistelement = [[
 ]]
 local directory = [[
 <div class="margin-h-10">
-    <div class="left">
-        <a class="button rounded-small" style="margin-top: 10px" href="/">Main Script</a>
-    </div>
-    <div class="left" style="width: 80px; margin-left: 10px">
-        <form action="/" method="post">
-            <input hidden name="action" value="list"/>
-            <button class="rounded-small" type="sumbit">Files</button>
-        </form>
-    </div>
+    {link1}
+    {link2}
     <div class="right">
         <form action="/" method="post">
             <input hidden name="action" value="signout"/>
@@ -258,6 +264,8 @@ local function ShowList()
     end
     pfile:close()
     output = output:gsub('{content}', directory, 1)
+    output = output:gsub('{link1}', links.mainscript, 1)
+    output = output:gsub('{link2}', links.directory, 1)
     output = output:gsub('{list}', table.concat(list, "\n"), 1)
 end
 
@@ -268,6 +276,8 @@ if is_logged_in then
             ipxe_file:write(post.text)
             ipxe_file:close()
             output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{link1}', links.ipxehelp, 1)
+            output = output:gsub('{link2}', links.directory, 1)
             output = output:gsub('{file}', 'ipxe', 1)
             output = output:gsub('{text}', post.text, 1)
         elseif (post.file:find('/') == nil) then
@@ -296,6 +306,8 @@ if is_logged_in then
         file:write('')
         file:close()
         output = output:gsub('{content}', editor, 1)
+        output = output:gsub('{link1}', links.mainscript, 1)
+        output = output:gsub('{link2}', links.directory, 1)
         output = output:gsub('{file}', filename, 1)
         output = output:gsub('{text}', '', 1)
     elseif (post.action == 'delete') then
@@ -308,12 +320,16 @@ if is_logged_in then
         if (post.file and post.file:find('/') == nil) then
             local file = assert(io.open(other_files_dir..'/'..post.file, 'r'))
             output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{link1}', links.mainscript, 1)
+            output = output:gsub('{link2}', links.directory, 1)
             output = output:gsub('{file}', post.file, 1)
             output = output:gsub('{text}', file:read('*a'), 1)
             file:close()
         else
             local file = assert(io.open(ipxe_file_path, 'r'))
             output = output:gsub('{content}', editor, 1)
+            output = output:gsub('{link1}', links.ipxehelp, 1)
+            output = output:gsub('{link2}', links.directory, 1)
             output = output:gsub('{file}', 'ipxe', 1)
             output = output:gsub('{text}', file:read('*a'), 1)
             file:close()

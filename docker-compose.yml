@@ -13,8 +13,8 @@ services:
       - '69:69/udp'
       - '8067:8067/tcp'
     environment:
-      - PXE_PASSWORD=${PXE_PASSWORD:-password}
-      - PXE_SERVERIP=${PXE_SERVERIP:-192.168.1.10}
-      - PXE_ROUTERIP=${PXE_ROUTERIP:-192.168.1.1}
+      - 'PXE_PASSWORD=${PXE_PASSWORD:-password}'
+      - 'PXE_SERVERIP=${PXE_SERVERIP:-192.168.1.10}'
+      - 'PXE_ROUTERIP=${PXE_ROUTERIP:-192.168.1.1}'
     restart: unless-stopped
 
