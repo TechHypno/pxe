@@ -5,9 +5,9 @@ LABEL github_url="https://github.com/TechHypno/pxe"
 RUN apk add --no-cache dnsmasq
 RUN apk add --no-cache nginx-mod-http-lua
 
-COPY etc/ /etc
+COPY etc /etc
 
-COPY tftp/ /var/tftp
+COPY --chown=dnsmasq:dnsmasq --chmod=664 tftp /var/tftp
 WORKDIR /var/tftp
 RUN mkdir links
 RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi
@@ -17,10 +17,12 @@ RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe.0
 RUN chown -R dnsmasq:dnsmasq *
+RUN chmod -R 664 *
 
-RUN chmod 666 /userdata/ipxe.conf
-RUN chmod 666 /userdata/session.db
-RUN chmod 777 /userdata/files
+COPY userdata /userdata
+RUN chmod 664 /userdata/ipxe.conf
+RUN chmod 664 /userdata/session.db
+RUN chmod 774 /userdata/files
 RUN chown -R nginx:nginx /userdata/*
 
 WORKDIR /var/log/nginx
