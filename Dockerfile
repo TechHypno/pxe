@@ -11,6 +11,7 @@ COPY userdata/. /userdata_defaults/
 
 COPY --chown=dnsmasq:dnsmasq --chmod=664 tftp/. /var/tftp/
 WORKDIR /var/tftp
+RUN mkdir links
 RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi
 RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi.0
 RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe
