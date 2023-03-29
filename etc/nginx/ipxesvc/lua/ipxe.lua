@@ -15,14 +15,12 @@ for _, line in ipairs(lines) do
     if line:find('#!ipxe') == 1 then
         local uuid = line:match('^.*(uuid-%S+).*$') or 'all'
         local ipv4 = line:match('^.*(ipv4-%S+).*$') or 'all'
-        -- ngx.say(ipv4..'.'..uuid)
         script = {} ipxe[ipv4..'.'..uuid] = script
     end
     if (script) then
         tinsert(script, line)
     end
 end
--- ngx.say(client_addr..'.'..client_uuid)
 script = ipxe[client_addr..'.'..client_uuid]
       or ipxe['all.'..client_uuid]
       or ipxe[client_addr..'.all']
