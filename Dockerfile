@@ -5,11 +5,11 @@ LABEL github_url="https://github.com/TechHypno/pxe"
 RUN apk add --no-cache dnsmasq
 RUN apk add --no-cache nginx-mod-http-lua
 
-COPY etc /etc
+COPY etc/. /etc/
 
-COPY userdata /userdata_defaults
+COPY userdata/. /userdata_defaults/
 
-COPY --chown=dnsmasq:dnsmasq --chmod=664 tftp /var/tftp
+COPY --chown=dnsmasq:dnsmasq --chmod=664 tftp/. /var/tftp/
 WORKDIR /var/tftp
 RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi
 RUN ln -s ../bootstrap/ipxe.efi ./links/ipxe.efi.0
