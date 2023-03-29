@@ -6,7 +6,7 @@
 - `PXE_PASSWORD` - a password for the web interface. (`default: password`)
 - `PXE_DATAPATH` - host file path for storing config files (`default: ./pxe`).
 
-For portainer change to `PXE_DATAPATH` to `/portainer/Files/AppData/Config/pxe` .
+For portainer change `PXE_DATAPATH` to `/portainer/Files/AppData/Config/pxe` .
 
 ## Web interface login on port 8067
 ![login page](assets/login.png?raw=true "Login")
@@ -19,7 +19,7 @@ For portainer change to `PXE_DATAPATH` to `/portainer/Files/AppData/Config/pxe` 
 Multiple script blocks can be included.
 First match is returned to an iPXE request.
 
-Criteria priority for a succesful match:
+Criteria priority for a successful match:
 1. uuid + address
 2. uuid
 3. address
