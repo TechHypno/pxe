@@ -6,6 +6,8 @@ RUN apk add --no-cache dnsmasq
 RUN apk add --no-cache nginx-mod-http-lua
 
 COPY etc/. /etc/
+RUN chown -R nginx:www-data /etc/nginx
+RUN chmod -R 755 /etc/nginx
 
 COPY userdata/. /userdata_defaults/
 RUN mkdir /userdata_defaults/files
