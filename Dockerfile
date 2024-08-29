@@ -6,6 +6,8 @@ RUN apk add --no-cache dnsmasq
 RUN apk add --no-cache nginx-mod-http-lua
 
 COPY etc/. /etc/
+RUN chown -Rh nginx:www-data /etc/nginx
+RUN chmod -Rh 755 /etc/nginx
 
 COPY userdata/. /userdata_defaults/
 RUN mkdir /userdata_defaults/files
@@ -19,8 +21,8 @@ RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe
 RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe.0
-RUN chown -R dnsmasq:dnsmasq *
-RUN chmod -R 664 *
+RUN chown -Rh dnsmasq:dnsmasq *
+RUN chmod -Rh 664 *
 
 
 WORKDIR /var/log/nginx
