@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   pxe:
     container_name: pxe
