@@ -21,8 +21,8 @@ RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe
 RUN ln -s ../bootstrap/undionly.kpxe ./links/undionly.kpxe.0
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe
 RUN ln -s ../bootstrap/boot.ipxe ./links/boot.ipxe.0
-RUN chown -R dnsmasq:dnsmasq *
-RUN chmod -R 664 *
+RUN chown -Rh dnsmasq:dnsmasq *
+RUN chmod -Rh 664 *
 
 
 WORKDIR /var/log/nginx
